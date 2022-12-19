@@ -12,15 +12,29 @@ import time
 
 
 
-#df = pandas.read_excel('calafate_sepa\\p3.xls')
-class Sepa:
+
+class Gestion:
+    #constructor
     def __init__(self):
         self.lista01=[]
         self.sepa=''
         self.n=100000
         self.hora=datetime.now().strftime('%H:%M')
         self.d=datetime.now().strftime('%Y-%m-%d')
-
+    
+    #interfaz donde se rellena para crear el resumen del sepa    
+    def datos_sepa(self):
+        global vmes
+        vmes=StringVar()
+        self.etiqueta_nombre=Label(self.raiz,text="mes").place(x=30, y=0)
+        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vmes).place(x=130, y=0)
+        button = Button(self.raiz,  
+                text = 'Enviar', 
+                height = 2, 
+                width = 25, 
+                bg='blue',command=s.resumen_sepa).place(x=250, y=150) 
+        
+    #interfaz donde se rellena para crear la factura
     def factura(self):
         global vnombre
         vnombre=StringVar()
@@ -68,6 +82,8 @@ class Sepa:
                 height = 2, 
                 width = 25, 
                 bg='blue',command=s.crea_factura).place(x=250, y=400)  
+    
+    #montaje de factura
     def crea_factura(self):
         
         file = open(f"calafate_sepa\\informes\\factura{self.n}.txt", "w",encoding="utf-8")
@@ -78,10 +94,10 @@ Fecha: {self.d} factura Nº{self.n}
 EMISOR                                                                      RECEPTOR 
 ____________________________                             ____________________________________
 Vegetariano El Calafate S.L.                                            {vnombre.get()} 
-CIF: B-93480127                                                           {vcif.get()}
-C/Andrés Pérez,6                                                           {vdireccion.get()} 
-29008  Málaga                                                               {vcp.get()} {vpoblacion.get()}
-952229344                                                                    {vpais.get()} 
+CIF: B-93480127                                                         {vcif.get()}
+C/Andrés Pérez,6                                                        {vdireccion.get()} 
+29008  Málaga                                                           {vcp.get()} {vpoblacion.get()}
+952229344                                                               {vpais.get()} 
 _________________________
 DESCRIPCIÓN DEL PROYECTO
 _________________________________________________________________________________________ 
@@ -98,11 +114,16 @@ Pago: efectivo-tarjeta.
 nombre:Vegetariano el Calafate''') 
         self.n+=1
         messagebox.showinfo(title='Factura creada',message='Su factura se ha creado satisfactoriamente')   
-        #interfaz() ok!        
+        q=messagebox.askquestion(title='Continue',message='¿Desea continuar creando facturas?')
+        if q =='yes':
+            s.factura()
+        else:
+            s.interfaz() 
+    #interfaz() ok!        
     def interfaz(self):#pantalla interfaz principal
       
         self.raiz=Tk()
-        self.nombre_usuario="Vegetariano El Calafate"
+        self.nombre_usuario="El Calafate"
         self.raiz.geometry("600x450+0+0")#cambio18/12
         self.raiz.configure(background='#F2F2F2')
         imagen= PhotoImage(file="calafate_sepa\\imagenes\\logo.gif")#cambio18/12
@@ -111,15 +132,15 @@ nombre:Vegetariano el Calafate''')
         self.raiz.title(self.nombre_usuario)
         
         menubarra=(self.raiz)
-        menubarra.configure(bg='green')
-        
         #self.mnu_archivo=Menu(self.barra_menu)
-        menubarra = Menu(self.raiz,bg='blue')#solo ,bg='blue' cambio18/12
+        menubarra = Menu(self.raiz)
       
       #----------------------
        # Crea un menu desplegable y lo agrega al menu barra
         menuarchivo = Menu(menubarra, tearoff=0)
         menuarchivo.add_command(label="Generar Factura",command=s.factura)
+        menuarchivo.add_command(label="Generar resumen Sepa",command=s.datos_sepa)
+
         menuarchivo.add_separator()
         menuarchivo.add_command(label="Salir")
         menubarra.add_cascade(label="Movimientos", menu=menuarchivo)
@@ -148,11 +169,12 @@ nombre:Vegetariano el Calafate''')
       
         self.raiz.mainloop()
 
-#funcion que crea los datos
-    def resumen_sepa(self,df):
-        mes=input('Introduzca el mes del Sepa a resumir: ')
-        file = open(f"calafate_sepa\\informes\\resumen_sepa_{mes}.txt", "w",encoding="utf-8")
-        file.write(f'GASTOS GENERADOS DURANTE EL MES DE <<{mes}>>' + os.linesep)
+    #funcion que crea los datos resumidos de gastos de un mes de sepa
+    def resumen_sepa(self):
+        
+        df = pandas.read_excel(f'calafate_sepa\\sepas2022\\{vmes.get()}.xls')
+        file = open(f"calafate_sepa\\informes\\resumen_sepa_{vmes.get()}.txt", "w",encoding="utf-8")
+        file.write(f'GASTOS GENERADOS DURANTE EL MES DE <<{vmes.get()}>>' + os.linesep)
         file.write('\n')
 
         lista01=list(df.Observaciones)
@@ -172,13 +194,13 @@ nombre:Vegetariano el Calafate''')
             if i <0:
                 total+=i
         
-        file.write(f'''La suma total de comisiones por tarjeta ---------> {sum(comisiones_tarjeta)} €
+        file.write(f'''La suma total de comisiones por tarjeta ---------> {round(sum(comisiones_tarjeta),2)} €
         La suma total de otros gastos -------------------> {round(total-sum(comisiones_tarjeta),2)} €
         Total--------------------------------------------> {round(sum(comisiones_tarjeta)+round(total-sum(comisiones_tarjeta),2),2)} €''')
         file.close()
       
  #------------------------------------------------------------- 
 if __name__ == "__main__":
-    s=Sepa()
+    s=Gestion()
     s.interfaz()
 
