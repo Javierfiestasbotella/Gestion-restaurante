@@ -81,7 +81,7 @@ class Gestion:
                 text = 'Enviar', 
                 height = 2, 
                 width = 25, 
-                bg='green',command=s.crea_factura).place(x=250, y=400)  
+                bg='blue',command=s.crea_factura).place(x=250, y=400)  
     
     #montaje de factura
     def crea_factura(self):
