@@ -3,6 +3,7 @@
 import pandas
 import numpy as np
 import os
+import tkinter as tk
 from tkinter import * 
 from tkinter import PhotoImage
 from tkinter import messagebox
@@ -24,16 +25,22 @@ class Gestion:
     
     #interfaz donde se rellena para crear el resumen del sepa    
     def datos_sepa(self):
+        
+        self.raiz2=tk.Toplevel()
+        self.raiz2.title("Resumen Sepa")
+        self.raiz2.geometry("300x250+0+0")#cambio18/12
+        self.raiz2.configure(background='#F2F2F2')
         global vmes
         vmes=StringVar()
-        self.etiqueta_nombre=Label(self.raiz,text="mes").place(x=30, y=0)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vmes).place(x=130, y=0)
-        button = Button(self.raiz,  
+        self.etiqueta_nombre=Label(self.raiz2,text="Mes").place(x=30, y=50)
+        self.espacio1=Entry(self.raiz2,justify=RIGHT,textvariable=vmes).place(x=130, y=50)
+        button = Button(self.raiz2,  
                 text = 'Enviar', 
                 height = 2, 
                 width = 25, 
-                bg='blue',command=s.resumen_sepa).place(x=250, y=150) 
-        
+                bg='blue',command=s.resumen_sepa).place(x=50, y=100) 
+   
+
     #interfaz donde se rellena para crear la factura
     def factura(self):
         global vnombre
@@ -50,6 +57,12 @@ class Gestion:
         vpais=StringVar()
         global vprecio
         vprecio=StringVar()
+        self.raiz=tk.Toplevel()
+        self.raiz.geometry("800x500+0+0")#cambio18/12
+        self.raiz.configure(background='#F2F2F2')
+        
+        
+        #Label(self.raiz, image=imagen, bd=0).pack()#cambio18/12
 
         self.etiqueta_nombre=Label(self.raiz,text="Precio").place(x=30, y=0)
         self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vprecio).place(x=130, y=0)
@@ -122,18 +135,19 @@ nombre:Vegetariano el Calafate''')
     #interfaz() ok!        
     def interfaz(self):#pantalla interfaz principal
       
-        self.raiz=Tk()
+        self.raiz0=Tk()
         self.nombre_usuario="El Calafate"
-        self.raiz.geometry("600x450+0+0")#cambio18/12
-        self.raiz.configure(background='#F2F2F2')
+        self.raiz0.geometry("600x450+0+0")#cambio18/12
+        self.raiz0.configure(background='#F2F2F2')
         imagen= PhotoImage(file="calafate_sepa\\imagenes\\logo.gif")#cambio18/12
-        Label(self.raiz, image=imagen, bd=0).pack()#cambio18/12
+        Label(self.raiz0, image=imagen, bd=0).pack()#cambio18/12
+      
         #self.raiz.iconbitmap("rubik.ico")
-        self.raiz.title(self.nombre_usuario)
+        self.raiz0.title(self.nombre_usuario)
         
-        menubarra=(self.raiz)
+        menubarra=(self.raiz0)
         #self.mnu_archivo=Menu(self.barra_menu)
-        menubarra = Menu(self.raiz)
+        menubarra = Menu(self.raiz0)
       
       #----------------------
        # Crea un menu desplegable y lo agrega al menu barra
@@ -165,9 +179,9 @@ nombre:Vegetariano el Calafate''')
         
           
         #Label(self.raiz).pack()
-        self.raiz.config(menu=menubarra)
+        self.raiz0.config(menu=menubarra)
       
-        self.raiz.mainloop()
+        self.raiz0.mainloop()
 
     #funcion que crea los datos resumidos de gastos de un mes de sepa
     def resumen_sepa(self):
@@ -198,7 +212,7 @@ nombre:Vegetariano el Calafate''')
         La suma total de otros gastos -------------------> {round(total-sum(comisiones_tarjeta),2)} €
         Total--------------------------------------------> {round(sum(comisiones_tarjeta)+round(total-sum(comisiones_tarjeta),2),2)} €''')
         file.close()
-      
+        self.raiz2.destroy()
  #------------------------------------------------------------- 
 if __name__ == "__main__":
     s=Gestion()
