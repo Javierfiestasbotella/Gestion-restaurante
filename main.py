@@ -40,7 +40,6 @@ class Gestion:
                 width = 25, 
                 bg='blue',command=s.resumen_sepa).place(x=50, y=100) 
    
-
     #interfaz donde se rellena para crear la factura
     def factura(self):
         global vnombre
@@ -57,6 +56,8 @@ class Gestion:
         vpais=StringVar()
         global vprecio
         vprecio=StringVar()
+        global vemail
+        vemail=StringVar()
         self.raiz=tk.Toplevel()
         self.raiz.geometry("800x500+0+0")#cambio18/12
         self.raiz.configure(background='#F2F2F2')
@@ -86,7 +87,7 @@ class Gestion:
         self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vpais).place(x=130, y=300)
 
         self.etiqueta_nombre=Label(self.raiz,text="Email").place(x=30, y=350)
-        self.espacio1=Entry(self.raiz,justify=RIGHT).place(x=130, y=350)
+        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vemail).place(x=130, y=350)
 
         C2 = Checkbutton(self.raiz,text="Guardar en BBDD",height=5,width=20).place(x=30, y=400)
 
@@ -99,7 +100,7 @@ class Gestion:
     #montaje de factura
     def crea_factura(self):
         
-        file = open(f"calafate_sepa\\informes\\factura{self.n}.txt", "w",encoding="utf-8")
+        file = open(f"calafate_sepa\\informes\\facturas\\factura{self.n}.txt", "w",encoding="utf-8")
         file.write(f'''  
                                   FACTURA 
 Fecha: {self.d} factura Nº{self.n}
@@ -129,9 +130,20 @@ nombre:Vegetariano el Calafate''')
         messagebox.showinfo(title='Factura creada',message='Su factura se ha creado satisfactoriamente')   
         q=messagebox.askquestion(title='Continue',message='¿Desea continuar creando facturas?')
         if q =='yes':
-            s.factura()
+            self.nombre=vnombre.set('')
+            self.direccion=vdireccion.set('')
+            self.cif=vcif.set('')
+            self.cp=vcp.set('')
+            self.poblacion=vpoblacion.set('')
+            self.pais=vpais.set('')
+            self.email=vemail.set('')
+            self.precio=vprecio.set('')
+            self.raiz.focus()
+
         else:
-            s.interfaz() 
+            self.raiz.destroy()
+            self.raiz0.focus()
+    
     #interfaz() ok!        
     def interfaz(self):#pantalla interfaz principal
       
@@ -187,7 +199,7 @@ nombre:Vegetariano el Calafate''')
     def resumen_sepa(self):
         
         df = pandas.read_excel(f'calafate_sepa\\sepas2022\\{vmes.get()}.xls')
-        file = open(f"calafate_sepa\\informes\\resumen_sepa_{vmes.get()}.txt", "w",encoding="utf-8")
+        file = open(f"calafate_sepa\\informes\\sepas\\resumen_sepa_{vmes.get()}.txt", "w",encoding="utf-8")
         file.write(f'GASTOS GENERADOS DURANTE EL MES DE <<{vmes.get()}>>' + os.linesep)
         file.write('\n')
 
@@ -213,6 +225,7 @@ nombre:Vegetariano el Calafate''')
         Total--------------------------------------------> {round(sum(comisiones_tarjeta)+round(total-sum(comisiones_tarjeta),2),2)} €''')
         file.close()
         self.raiz2.destroy()
+        self.raiz0.focus()
  #------------------------------------------------------------- 
 if __name__ == "__main__":
     s=Gestion()
