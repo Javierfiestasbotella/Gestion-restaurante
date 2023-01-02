@@ -10,8 +10,9 @@ from tkinter import messagebox
 import datetime
 from datetime import datetime
 import time
-
-
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import smtplib
 
 
 class Gestion:
@@ -22,6 +23,48 @@ class Gestion:
         self.n=100000
         self.hora=datetime.now().strftime('%H:%M')
         self.d=datetime.now().strftime('%Y-%m-%d')
+    
+    #envio2 intenta enviar adjuntos, pero de momento no funciona
+    def envio2(self):
+        # Crear una instancia con archivos adjuntos
+        msg = MIMEMultipart()
+        
+        # Anexo de estructura 1
+        att1 = MIMEText(open('calafate_sepa\\informes\\facturas\\javi.txt', 'rb').read(), 'base64', 'gb2312')
+        #att1["Content-Type"] = 'application/octet-stream'
+        #att1 ["Content-Disposition"] = 'adjunto; filename = "javi.txt"' # El nombre de archivo aquí se puede escribir arbitrariamente, qué nombre se escribe, qué nombre se muestra en el correo electrónico
+        msg.attach(att1)
+        #   Encabezado de correo
+        msg ['to'] = ";". join (['vegetarianoelcalafate@gmail.com']) # correo electrónico del destinatario
+        msg ['from'] = 'javierfiestasbotella@gmail.com' # correo electrónico del remitente
+        msg ['subject'] = 'hello world soy yo' # Encabezado de correo electrónico enviado
+        #Enviar correo
+        try:
+            server = smtplib.SMTP()
+            server.connect('vegetarianoelcalafate@gmail.com')
+            server.login ('javierfiestasbotella@gmail.com','vxmavinbhhykaler') #XXX es el nombre de usuario y XXXXX es el código de autorización
+            server.sendmail(msg['from'], msg['to'], msg.as_string())
+            server.quit()
+            print ('Enviar correctamente')
+        except (Exception):
+                print ("Está terminado ...")
+
+    #envía un email al email del argumento y mensaje del argumento
+    def envio_email(self,email,message):
+        fromaddr = 'javierfiestasbotella@gmail.com'
+        toaddrs  = email
+        msg =message.encode('utf-8')
+
+        # Datos
+        username = 'javierfiestasbotella@gmail.com'
+        password = 'vxmavinbhhykaler'
+
+        # Enviando el correo
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        server.starttls()
+        server.login(username,password)
+        server.sendmail(fromaddr, toaddrs, msg)
+        server.quit()
     
     #interfaz donde se rellena para crear el resumen del sepa    
     def datos_sepa(self):
@@ -59,49 +102,56 @@ class Gestion:
         global vemail
         vemail=StringVar()
         self.raiz=tk.Toplevel()
-        self.raiz.geometry("800x500+0+0")#cambio18/12
+        self.raiz.geometry("650x550+0+0")#cambio18/12
         self.raiz.configure(background='#F2F2F2')
-        
+        dist_y=0
         
         #Label(self.raiz, image=imagen, bd=0).pack()#cambio18/12
 
-        self.etiqueta_nombre=Label(self.raiz,text="Precio").place(x=30, y=0)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vprecio).place(x=130, y=0)
-
-        self.etiqueta_nombre=Label(self.raiz,text="Nombre").place(x=30, y=50)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vnombre).place(x=130, y=50)
-
-        self.etiqueta_nombre=Label(self.raiz,text="CIF/NIF/NIE").place(x=30, y=100)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vcif).place(x=130, y=100)
-
-        self.etiqueta_nombre=Label(self.raiz,text="Dirección").place(x=30, y=150)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,width=50,textvariable=vdireccion).place(x=130, y=150)
-
-        self.etiqueta_nombre=Label(self.raiz,text="C.P.").place(x=30, y=200)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vcp).place(x=130, y=200)
-
-        self.etiqueta_nombre=Label(self.raiz,text="Población").place(x=30, y=250)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vpoblacion).place(x=130, y=250)
-
-        self.etiqueta_nombre=Label(self.raiz,text="País").place(x=30, y=300)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vpais).place(x=130, y=300)
-
-        self.etiqueta_nombre=Label(self.raiz,text="Email").place(x=30, y=350)
-        self.espacio1=Entry(self.raiz,justify=RIGHT,textvariable=vemail).place(x=130, y=350)
-
-        C2 = Checkbutton(self.raiz,text="Guardar en BBDD",height=5,width=20).place(x=30, y=400)
-
+        self.etiqueta_titulo=Label(self.raiz,text="Rellene datos de la factura", font=("Helvetica", 14)).place(x=200, y=dist_y)
+        dist_y+=50
+        self.etiqueta_nombre=Label(self.raiz,text="Precio", font=("Helvetica", 14)).place(x=30, y=dist_y)
+        self.espacio1=Entry(self.raiz,justify=LEFT,textvariable=vprecio).place(x=130, y=dist_y)
+        dist_y+=50
+        self.etiqueta_nombre=Label(self.raiz,text="Nombre", font=("Helvetica", 14)).place(x=30, y=dist_y)
+        self.espacio2=Entry(self.raiz,justify=LEFT,textvariable=vnombre).place(x=130, y=dist_y)
+        dist_y+=50
+        self.etiqueta_nombre=Label(self.raiz,text="CIF/NIF/NIE", font=("Helvetica", 14)).place(x=30, y=dist_y)
+        self.espacio3=Entry(self.raiz,justify=LEFT,textvariable=vcif).place(x=150, y=dist_y)
+        dist_y+=50
+        self.etiqueta_nombre=Label(self.raiz,text="Dirección", font=("Helvetica", 14)).place(x=30, y=dist_y)
+        self.espacio4=Entry(self.raiz,justify=LEFT,width=50,textvariable=vdireccion).place(x=130, y=dist_y)
+        dist_y+=50
+        self.etiqueta_nombre=Label(self.raiz,text="C.P.", font=("Helvetica", 14)).place(x=30, y=dist_y)
+        self.espacio5=Entry(self.raiz,justify=LEFT,textvariable=vcp).place(x=130, y=dist_y)
+        dist_y+=50
+        self.etiqueta_nombre=Label(self.raiz,text="Población", font=("Helvetica", 14)).place(x=30, y=dist_y)
+        self.espacio6=Entry(self.raiz,justify=LEFT,textvariable=vpoblacion).place(x=130, y=dist_y)
+        dist_y+=50
+        self.etiqueta_nombre=Label(self.raiz,text="País", font=("Helvetica", 14)).place(x=30, y=dist_y)
+        self.espacio7=Entry(self.raiz,justify=LEFT,textvariable=vpais).place(x=130, y=dist_y)
+        dist_y+=50
+        self.etiqueta_nombre=Label(self.raiz,text="Email", font=("Helvetica", 14)).place(x=30, y=dist_y)
+        self.espacio8=Entry(self.raiz,justify=LEFT,width=50,textvariable=vemail).place(x=130, y=dist_y)
+        dist_y+=50
+        C2 = Checkbutton(self.raiz,text="Guardar en BBDD", font=("Helvetica", 14),height=5,width=20).place(x=30, y=dist_y)
+        dist_y+=50
+        chk=None
+        if chk == 'yes':
+            chk==True
+        else:
+            chk==False
         button = Button(self.raiz,  
                 text = 'Enviar', 
                 height = 2, 
                 width = 25, 
-                bg='blue',command=s.crea_factura).place(x=250, y=400)  
+                bg='blue',command = s.crea_factura).place(x=280, y=dist_y)  
     
     #montaje de factura
     def crea_factura(self):
         
         file = open(f"calafate_sepa\\informes\\facturas\\factura{self.n}.txt", "w",encoding="utf-8")
-        file.write(f'''  
+        mesage=(f'''  
                                   FACTURA 
 Fecha: {self.d} factura Nº{self.n}
 
@@ -126,7 +176,10 @@ ____________________________________________________________________TOTAL ({vpre
  
 Pago: efectivo-tarjeta.
 nombre:Vegetariano el Calafate''') 
+        file.write(mesage)
         self.n+=1
+        print(mesage)
+        
         messagebox.showinfo(title='Factura creada',message='Su factura se ha creado satisfactoriamente')   
         q=messagebox.askquestion(title='Continue',message='¿Desea continuar creando facturas?')
         if q =='yes':
@@ -230,4 +283,7 @@ nombre:Vegetariano el Calafate''')
 if __name__ == "__main__":
     s=Gestion()
     s.interfaz()
+
+
+s.envio_email('vegetarianoelcalafate@gmail.com','prueba 1')
 
