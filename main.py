@@ -13,7 +13,8 @@ import time
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
-
+import pathlib
+import webbrowser
 
 class Gestion:
     #constructor
@@ -23,6 +24,7 @@ class Gestion:
         self.n=100000
         self.hora=datetime.now().strftime('%H:%M')
         self.d=datetime.now().strftime('%Y-%m-%d')
+        self.seudo=pathlib.Path(__file__).parent.absolute()
     
     #envio2 intenta enviar adjuntos, pero de momento no funciona
     def envio2(self):
@@ -150,16 +152,16 @@ class Gestion:
     #montaje de factura
     def crea_factura(self):
         
-        file = open(f"calafate_sepa\\informes\\facturas\\factura{self.n}.txt", "w",encoding="utf-8")
+        file = open(f"{self.seudo}\\informes\\facturas\\factura{self.n}.txt", "w",encoding="utf-8")
         mesage=(f'''  
                                   FACTURA 
 Fecha: {self.d} factura Nº{self.n}
 
 EMISOR                                                                      RECEPTOR 
 ____________________________                             ____________________________________
-Vegetariano El Calafate S.L.                                            {vnombre.get()} 
-CIF: B-93480127                                                         {vcif.get()}
-C/Andrés Pérez,6                                                        {vdireccion.get()} 
+Vegetariano El Calafate S.L.                                         {vnombre.get()} 
+CIF: B-93480127                                                       {vcif.get()}
+C/Andrés Pérez,6                                                       {vdireccion.get()} 
 29008  Málaga                                                           {vcp.get()} {vpoblacion.get()}
 952229344                                                               {vpais.get()} 
 _________________________
@@ -197,6 +199,12 @@ nombre:Vegetariano el Calafate''')
             self.raiz.destroy()
             self.raiz0.focus()
     
+    def EjecutarEvento(self,event=None): #Event, el argumento se debe poner para ejecutar la 
+                                #acción, "None", para evitar agregar el argumento
+                                #event en cada widget o label.
+            webbrowser.open('https://vegetarianoelcalafate.es')
+    
+
     #interfaz() ok!        
     def interfaz(self):#pantalla interfaz principal
       
@@ -204,9 +212,18 @@ nombre:Vegetariano el Calafate''')
         self.nombre_usuario="El Calafate"
         self.raiz0.geometry("600x450+0+0")#cambio18/12
         self.raiz0.configure(background='#F2F2F2')
-        imagen= PhotoImage(file="calafate_sepa\\imagenes\\logo.gif")#cambio18/12
+        imagen= PhotoImage(file=f"{self.seudo}\\imagenes\\logo.gif")#cambio18/12
         Label(self.raiz0, image=imagen, bd=0).pack()#cambio18/12
-      
+        self.labelEjemplo = tk.Label(self.raiz0, text="WEB-SITE", font=("Microsoft Sans Serif", 12, 
+            "underline"), foreground="green")
+        self.labelEjemplo.place(x=250, y=200)
+        self.labelEjemplo.bind("<Button-1>", s.EjecutarEvento)
+        #---------------------------------
+    
+            
+
+        #----------------------
+
         #self.raiz.iconbitmap("rubik.ico")
         self.raiz0.title(self.nombre_usuario)
         
@@ -251,8 +268,8 @@ nombre:Vegetariano el Calafate''')
     #funcion que crea los datos resumidos de gastos de un mes de sepa
     def resumen_sepa(self):
         
-        df = pandas.read_excel(f'calafate_sepa\\sepas2022\\{vmes.get()}.xls')
-        file = open(f"calafate_sepa\\informes\\sepas\\resumen_sepa_{vmes.get()}.txt", "w",encoding="utf-8")
+        df = pandas.read_excel(f'{self.seudo}\\sepas2022\\{vmes.get()}.xls')
+        file = open(f"{self.seudo}\\informes\\sepas\\resumen_sepa_{vmes.get()}.txt", "w",encoding="utf-8")
         file.write(f'GASTOS GENERADOS DURANTE EL MES DE <<{vmes.get()}>>' + os.linesep)
         file.write('\n')
 
@@ -285,5 +302,5 @@ if __name__ == "__main__":
     s.interfaz()
 
 
-s.envio_email('vegetarianoelcalafate@gmail.com','prueba 1')
+#s.envio_email('vegetarianoelcalafate@gmail.com','prueba 1')
 

@@ -1,14 +1,14 @@
   
                                   FACTURA 
-Fecha: 2022-12-22 factura Nº100000
+Fecha: 2023-01-04 factura Nº100000
 
 EMISOR                                                                      RECEPTOR 
 ____________________________                             ____________________________________
-Vegetariano El Calafate S.L.                                            pepiun 
-CIF: B-93480127                                                         654
-C/Andrés Pérez,6                                                        lkj 
-29008  Málaga                                                           987987987 lklklkjlkjl
-952229344                                                               fctfctctx 
+Vegetariano El Calafate S.L.                                         sljdnlsndonon 
+CIF: B-93480127                                                     ononoin0mp
+C/Andrés Pérez,6                                                    lñlpn ñlkn ojnpupiun 
+29008  Málaga                                                        oiunpnmpiono  poijpoihpomò
+952229344                                                             òij`mòij 
 _________________________
 DESCRIPCIÓN DEL PROYECTO
 _________________________________________________________________________________________ 
@@ -17,9 +17,9 @@ SERVICIO PRESTADO                  CANTIDAD                                     
 ------------------------------------------------------------------------------------
 Servicio de Hosteleria
 Comida(Menú) 
-____________________________________________________________________TOTAL (253.59€) 100 
+____________________________________________________________________TOTAL (5171771.34€) 100 
 ____________________________________________________________________IVA (21%) 
-____________________________________________________________________TOTAL (321€)  
+____________________________________________________________________TOTAL (6546546€)  
  
 Pago: efectivo-tarjeta.
 nombre:Vegetariano el Calafate
