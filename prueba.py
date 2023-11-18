@@ -19,8 +19,8 @@ for i, nevera in enumerate(neveras + congeladores, start=2):
     sheet.cell(row=1, column=i, value=nevera)
 
 # Define la fecha de inicio y la fecha actual
-fecha_inicio = datetime(2021, 1, 1)
-fecha_actual = datetime(2021, 12, 31)
+fecha_inicio = datetime(2023, 1, 1)
+fecha_actual = datetime(2023, 6, 30)
 
 # Itera sobre las fechas y las neveras y escribe los datos en la tabla
 fila = 2
@@ -39,4 +39,8 @@ while fecha <= fecha_actual:
     fila += 1
 
 # Guarda el libro de Excel
-workbook.save("temperaturas2021.xlsx")
+try:
+    workbook.save("temperaturas2023.xlsx")
+    print('archivo guardado')
+except:
+    print('Ha ocurrido algún error')
